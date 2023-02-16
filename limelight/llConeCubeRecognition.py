@@ -5,6 +5,7 @@ import numpy as np
     Returns largest contour coordinates, and contour type (cone or cube).
     Cone: 1
     Cube: 0
+    No Contour: -1
 """
 def get_largest_contour(cone_contours, cube_contours):
     if len(cone_contours) == 0:
@@ -25,6 +26,7 @@ def get_largest_contour(cone_contours, cube_contours):
     Returns largest contour for the LL crosshair, the modified image, and custom robot data (whether the contour is a cone or cube).
     Cone: 1
     Cube: 0
+    No Contour: -1
 """
 def runPipeline(image, llrobot):
     # convert the input image to the HSV color space
@@ -44,8 +46,8 @@ def runPipeline(image, llrobot):
     largest_contour = np.array([[]])
     largest_contour_type = None
 
-    # values to send back to the robot
-    llpython = []
+    # values to send back to the robot: send back type of largest contour detected
+    llpython = [-1]
 
     if len(cone_contours) > 0 or len(cube_contours) > 0:
         largest_contour, largest_contour_type = get_largest_contour(cone_contours, cube_contours)
@@ -54,7 +56,7 @@ def runPipeline(image, llrobot):
         if h * w < SPECKLE_THRESHOLD:
             # detected speckles, ignore the contours
             largest_contour = np.array([[]])
-            llpython = []
+            llpython = [-1]
             cv2.putText(image, 'No contours', (0, 230), cv2.FONT_HERSHEY_SIMPLEX, .5, (0, 255, 0), 1, cv2.LINE_AA)
         else:
             # draw the unrotated bounding box
