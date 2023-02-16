@@ -3,28 +3,28 @@ import numpy as np
 
 """
     Returns largest contour coordinates, and contour type (cone or cube).
-    Cone: 0
-    Cube: 1
+    Cone: 1
+    Cube: 0
 """
 def get_largest_contour(cone_contours, cube_contours):
     if len(cone_contours) == 0:
-        return (max(cube_contours, key=cv2.contourArea), 1)
+        return (max(cube_contours, key=cv2.contourArea), 0)
     elif len(cube_contours) == 0:
-        return (max(cone_contours, key=cv2.contourArea), 0)
+        return (max(cone_contours, key=cv2.contourArea), 1)
     else:
         largest_cone_contour = max(cone_contours, key=cv2.contourArea)
         largest_cube_contour = max(cube_contours, key=cv2.contourArea)
         if cv2.contourArea(largest_cone_contour) > cv2.contourArea(largest_cube_contour):
-            return (largest_cone_contour, 0)
+            return (largest_cone_contour, 1)
         else:
-            return (largest_cube_contour, 1)
+            return (largest_cube_contour, 0)
 
 
 # runPipeline() is called every frame by Limelight's backend.
 """
     Returns largest contour for the LL crosshair, the modified image, and custom robot data (whether the contour is a cone or cube).
-    Cone: 0
-    Cube: 1
+    Cone: 1
+    Cube: 0
 """
 def runPipeline(image, llrobot):
     # convert the input image to the HSV color space
